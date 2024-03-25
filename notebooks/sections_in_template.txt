@@ -1,0 +1,7 @@
+1. left side: filter area.
+    filter by state, make, price, mileage, bodyType, driveType, etc.
+2. right side:
+    1. summary statistics, by state, make, bodyType
+    2. location summary; a map
+    3. distribution of price, bodyType, make, driveType
+    4. relationship between price and other features

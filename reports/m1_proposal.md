@@ -1,6 +1,6 @@
 # Project Proposal
 
-## Motivation and Purpose (Alan)
+## Motivation and Purpose
 
 ### OUR ROLE: Data Science Consultancy Firm (Core Practices in Small Businesses Consulting and Environmental Awareness)
 
@@ -10,7 +10,7 @@ In the aftermath left by the COVID-19 pandemic, the sale of new cars was extreme
   
 To address this, we are proposing a dashboard that analyzes the used car sales data from eBay, our dashboard will provide insights into trends relating to pricing, demand, and sale of cars by geography, and breakdowns of what cars are sought after by make, model, and type (SUV, Sedan, Coupe, etc.). By identifying these patterns and KPI that may help understand which areas of the United States demand certain vehicles – we can help private sellers be more informed on decisions related to pricing and organizing their inventory and product offering. Ultimately, we hope our dashboard leads to helping sellers succeed in optimizing their operations and satisfying more customers in need of 2nd hand vehicles through understanding the dynamics of the 2nd hard car market. We hope this tool assists dealers and potential entrepreneurs in identifying potential gaps in the market and possible investment opportunities – as well as promoting the practice of consuming second-hand cars to reduce the strain on the market and environment!
 
-## Description of the data (Doris)
+## Description of the data
 
 The dataset we selected for our dashboard was sourced from eBay, which consists of numerous variables and metrics pertaining to cars sold online. The dataset is comprised of approximately 160,000 observations of used cars sold in the United States – the data set is described to span 20 months between 2019 and 2020, however, we see a number of sales in 2018 as well during our EDA. Some variables included are:
 
@@ -24,7 +24,7 @@ In our dashboard we plan to focus on the key variables that influence a car's sa
   
 One variable we look to derive and engineer for our visualization is `Price Range`, which will serve to categorize and bin the various cars sold into price brackets related to their level of ‘luxury’. This variable will include values such as: ‘economy’, ‘mid-range’, and ‘luxury’. This variable will help us understand and segment the market trends and patterns within the groups to know what level of vehicle consumers are looking for when buying 2nd hand. We will also be looking to make use of the `ZIP Code` variable and converting it to a usable Coordinate Reference System, preferably a linear CRS so that we can model and display sales within the United States since we are not working on a global scale where angular units would be useful.
 
-## Research questions and usage scenarios (Charles)
+## Research questions and usage scenarios
 
 ### Persona
 
@@ -44,6 +44,6 @@ When Ali logs into the dashboard, he is greeted with an interactive map showing 
 Based on the insights gained from our dashboard, Ali decides to increase the inventory of mid-range SUVs and adjust his pricing strategy to align with national averages while remaining competitive locally. He also plans to reduce the stock of slow-moving vehicle types, optimizing the inventory to meet regional demand and improve sales turnover.
 
 
-## App sketch & brief description (Chris)
+## App sketch & brief description
 
 ![App Sketch](../img/sketch.png)

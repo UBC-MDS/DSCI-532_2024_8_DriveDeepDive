@@ -12,10 +12,10 @@ To address this, we are proposing a dashboard that analyzes the used car sales d
 
 ## Description of the data
 
-The dataset we selected for our dashboard was sourced from eBay, which consists of numerous variables and metrics pertaining to cars sold online. The dataset is comprised of approximately 160,000 observations of used cars sold in the United States – the data set is described to span 20 months between 2019 and 2020, however, we see a number of sales in 2018 as well during our EDA. Some variables included are:
+The [dataset](https://www.kaggle.com/datasets/tsaustin/us-used-car-sales-data) we selected for our dashboard was sourced from eBay, which consists of numerous variables and metrics pertaining to cars sold online. The dataset is comprised of approximately 160,000 observations of used cars sold in the United States – the data set is described to span 20 months between 2019 and 2020, however, we see a number of sales in 2018 as well during our EDA. Some variables included are:
 
-**Basic Car Details/Description:** Make, Model, Mileage, Year, Engine, Trim level, Body Style.  
-  
+**Basic Car Details/Description:** Make, Model, Mileage, Year, Engine, Trim level, Body Style.、
+
 **Sales Information:** Price car was sold for, Year the car was sold, ZIP code (location) of sale.
 
 The dataset is comprised of both numerical and categorical features, for example `price sold` and `mileage` (continuous variable). As well as `make`, `body style`, and `model` (categorical variable) – as well as `year of sale` (temporal time-series variable).  
@@ -43,7 +43,10 @@ When Ali logs into the dashboard, he is greeted with an interactive map showing 
 
 Based on the insights gained from our dashboard, Ali decides to increase the inventory of mid-range SUVs and adjust his pricing strategy to align with national averages while remaining competitive locally. He also plans to reduce the stock of slow-moving vehicle types, optimizing the inventory to meet regional demand and improve sales turnover.
 
-
 ## App sketch & brief description
 
-![App Sketch](../img/sketch.png)
+ ![img](../img/sketch.png)
+
+Our dashboard, titled "Used Car Transaction Overview: Across States in US," provides a comprehensive and user-friendly interface for analyzing the second-hand car market. The left panel features a suite of interactive controls, including dropdown menus for selecting state, vehicle make, body type, and sliders for year and price range. This allows users to filter the dataset dynamically according to their specific interests or needs. The central panel offers a visual feast of information: a heatmap highlighting the number of transactions per state, histograms showing the distribution of sale prices, and bar charts detailing the distribution of sales across different car body types. The visualization ensures users can at a glance, grasp patterns and outliers in the data.
+
+On the right side of the dashboard, concise and critical information such as the total number of sales, the current average sale price, and a summary of transactions over selected years are elegantly displayed. These key performance indicators (KPIs) give an immediate snapshot of the market's health and trends. Additionally, the multi-line chart illustrating average sale prices over time allows users to observe and analyze pricing trends, providing valuable insights for decision-making. With the ability to zoom and hover for more detailed information, the dashboard empowers users like Ali to make data-driven decisions to optimize inventory and pricing strategies effectively.

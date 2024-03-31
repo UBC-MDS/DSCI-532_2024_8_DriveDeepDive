@@ -46,4 +46,4 @@ Based on the insights gained from our dashboard, Ali decides to increase the inv
 
 ## App sketch & brief description (Chris)
 
-To be added
+![App Sketch](../img/sketch.png)

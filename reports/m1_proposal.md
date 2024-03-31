@@ -1,30 +1,30 @@
 # Project Proposal
 
-## Motivation and Purpose (Alan)
+## Motivation and Purpose
 
 ### OUR ROLE: Data Science Consultancy Firm (Core Practices in Small Businesses Consulting and Environmental Awareness)
 
 ### TARGET AUDDIENCE: Car Dealerships in the United States and Private Sellers/Entrepreneurs.
 
-The aftermath left by the COVID-19 pandemic the sale of new cars was extremely impacted, resulting in a reduction of supply given the global supply chain slow down. The used car market as a result became extremely competitive, and to this day pricing vehicles accurately and understanding market trends by locations is crucial to the success of deal with 2nd had cars. Deals and private sellers often struggle to understand how to price their vehicles and know where the best geographically market is to maximize their returns and supply cars to customers in need.   
-  
+The aftermath left by the COVID-19 pandemic the sale of new cars was extremely impacted, resulting in a reduction of supply given the global supply chain slow down. The used car market as a result became extremely competitive, and to this day pricing vehicles accurately and understanding market trends by locations is crucial to the success of deal with 2nd had cars. Deals and private sellers often struggle to understand how to price their vehicles and know where the best geographically market is to maximize their returns and supply cars to customers in need.
+
 To address this, we are proposing a dashboard that analyzes the used car sales data from eBay, out dashboard will provide insights into trends relating to pricing, demand, and sale of cars by geography, and breakdowns of what cars are sought after by make, model, and type (SUV, Sedan, Coupe, etc.). Through identifying these patterns and KPI that may help understand which areas of the United States demand certain vehicles – we can help private sellers be more informed on decisions related to pricing and organizing their inventory and product offering. Ultimately, we hope our dashboard lead to helping sellers succeed in optimizing their operations and satisfying more customers in need of 2nd hand vehicles through understanding the dynamics of the 2nd hard car market. We hope this tool assists dealers and potential entrepreneurs to identifying potential gaps in the market and possible investment opportunities – as well as promote the practice of consuming second-hand cars to reduce the strain on the market and environment!
 
-## Description of the data (Doris)
+## Description of the data
 
-The dataset we select for our dashboard was sourced from eBay, which consists of numerous variables and metrics pertaining to car sold online. The dataset is comprised of approximately 160,000 observations of used cars sold in the United States – the data set is described to span 20 months between 2019 and 2020, however we see a number of sales in 2018 as well during our EDA. Some variables included are:
+The [dataset](https://www.kaggle.com/datasets/tsaustin/us-used-car-sales-data) we select for our dashboard was sourced from eBay, which consists of numerous variables and metrics pertaining to car sold online. The dataset is comprised of approximately 160,000 observations and 12 attributes of used cars sold in the United States – the data set is described to span 20 months between 2019 and 2020, however we see a number of sales in 2018 as well during our EDA. Some variables included are:
 
-**Basic Car Details/Description:** Make, Model, Mileage, Year, Engine, Trim level, Body Style.  
-  
+**Basic Car Details/Description:** Make, Model, Mileage, Year, Engine, Trim level, Body Style.
+
 **Sales Information:** Price car was sold for, Year the car was sold, ZIP code (location) of sale.
 
-The dataset is comprised of both numerical and categorical features, for example `price sold` and `mileage` (continuous variable). As well as `make`, ‘body style`, and `model` (categorical variable) – as well as `year of sale` (temporal time-series variable).  
-  
-In our dashboard we plan to focus on the key variables that influence a cars sale and pricing, this includes variables such as `make`, `model`, `body style`, `year`, and `mileage`.  These variables are extremely important for understanding market trends, possible pricing strategies to employ, as well as the behaviour and preferences of consumers in the 2nd hand card market. We will also rely on `ZIP Code` to understand the spatial relationship and nature of car sales, to understand what geographies look for certain types of cars, and which locations have the highest demand for cars.   
-  
-One variable we look to derive and engineer for our visualization is `Price Range`, which will serve to categorize and bin the various cars sold into price brackets related to their level of ‘luxury’. This variable will include values such as: ‘economy’, ‘mid range’, and ‘luxury’. This variable will help us understand and segment the market trends and understand patterns within the groups to know what level of vehicle consumers are looking for when buying 2nd hand. We will also be looking to make use of the `ZIP Code` variable and converting it to a usable Coordinate Reference System, preferably a linear CRS so that we can model and display sales within the United States, since we are not working on a global scale where angular units would be useful. 
+The dataset is comprised of both numerical and categorical features, for example `price sold` and `mileage` (continuous variable). As well as `make`, ‘body style `, and `model `(categorical variable) – as well as`year of sale` (temporal time-series variable).
 
-## Research questions and usage scenarios (Charles)
+In our dashboard we plan to focus on the key variables that influence a cars sale and pricing, this includes variables such as `make`, `model`, `body style`, `year`, and `mileage`.  These variables are extremely important for understanding market trends, possible pricing strategies to employ, as well as the behaviour and preferences of consumers in the 2nd hand card market. We will also rely on `ZIP Code` to understand the spatial relationship and nature of car sales, to understand what geographies look for certain types of cars, and which locations have the highest demand for cars.
+
+One variable we look to derive and engineer for our visualization is `Price Range`, which will serve to categorize and bin the various cars sold into price brackets related to their level of ‘luxury’. This variable will include values such as: ‘economy’, ‘mid range’, and ‘luxury’. This variable will help us understand and segment the market trends and understand patterns within the groups to know what level of vehicle consumers are looking for when buying 2nd hand. We will also be looking to make use of the `ZIP Code` variable and converting it to a usable Coordinate Reference System, preferably a linear CRS so that we can model and display sales within the United States, since we are not working on a global scale where angular units would be useful.
+
+## Research questions and usage scenarios
 
 ### Persona
 
@@ -43,7 +43,10 @@ When Ali logs into the dashboard, he is greeted with an interactive map showing 
 
 Based on the insights gained from our dashboard, Ali decides to increase the inventory of mid-range SUVs and adjust his pricing strategy to align with national averages while remaining competitive locally. He also plans to reduce the stock of slow-moving vehicle types, optimizing the inventory to meet regional demand and improve sales turnover.
 
+## App sketch & brief description
 
-## App sketch & brief description (Chris)
+ ![img](../img/sketch.png)
 
-To be added
+Our dashboard, titled "Used Car Transaction Overview: Across States in US," provides a comprehensive and user-friendly interface for analyzing the second-hand car market. The left panel features a suite of interactive controls, including dropdown menus for selecting state, vehicle make, body type, and sliders for year and price range. This allows users to filter the dataset dynamically according to their specific interests or needs. The central panel offers a visual feast of information: a heatmap highlighting the number of transactions per state, histograms showing the distribution of sale prices, and bar charts detailing the distribution of sales across different car body types. The visualization ensures users can at a glance, grasp patterns and outliers in the data.
+
+On the right side of the dashboard, concise and critical information such as the total number of sales, the current average sale price, and a summary of transactions over selected years are elegantly displayed. These key performance indicators (KPIs) give an immediate snapshot of the market's health and trends. Additionally, the multi-line chart illustrating average sale prices over time allows users to observe and analyze pricing trends, providing valuable insights for decision-making. With the ability to zoom and hover for more detailed information, the dashboard empowers users like Ali to make data-driven decisions to optimize inventory and pricing strategies effectively.

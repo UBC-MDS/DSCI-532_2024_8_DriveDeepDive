@@ -81,4 +81,8 @@
         flex-direction: column;
         justify-content: space-between;
     }
+
+    .chart_container {
+        margin-top: 20px;
+    }
 }

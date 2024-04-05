@@ -1,5 +1,6 @@
 
 import dash_bootstrap_components as dbc
+import dash_vega_components as dvc
 from dash import dcc, html
 
 def parsePrice(price):
@@ -8,7 +9,7 @@ def parsePrice(price):
 def generateDropDownrDiv(valueName, labelName, options=[], value=None):
     return html.Div([
         dbc.Label(labelName, className='filter_label'),
-        dcc.Dropdown(id=f'{valueName}_select', options=options, value=value, className="filter_input"),
+        dcc.Dropdown(id=valueName, options=options, value=value, className="filter_input"),
     ])
 
 def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[]):
@@ -17,7 +18,7 @@ def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[]):
     return html.Div([
         dbc.Label(labelName, className='filter_label'),
         dcc.RangeSlider(
-            id=f'{valueName}_range',
+            id=valueName,
             min=minValue,
             max=maxValue,
             value=value,
@@ -30,3 +31,9 @@ def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[]):
             },
         )
     ], className="filter_input")
+
+
+def generateChart(id, spec):
+    return dbc.Col([
+            dvc.Vega(id=id, spec=spec, style={'width': '100%' }),
+        ])

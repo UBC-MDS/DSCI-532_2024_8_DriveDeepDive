@@ -17,7 +17,7 @@ num_body_type = 2
 html.Div(id='Header', children=[
     html.Link(
         rel='stylesheet',
-        href='styles/app.css'
+        href='assets/app.css'
     )
 ])
 
@@ -27,7 +27,7 @@ filterArea = html.Div([
         generateDropDownrDiv(valueName='mileage', labelName='Mileage:', options=[], value=None),
         generateDropDownrDiv(valueName='bodyType', labelName='BodyType:', options=[], value=None),
         generageRangeSliderDiv(valueName='yearRange', labelName='YearRange', minValue=1950, maxValue=2024, value=[]),
-        generageRangeSliderDiv(valueName='priceRange', labelName='PriceRange', minValue=0, maxValue=500_000, value=[]   ),
+        generageRangeSliderDiv(valueName='priceRange', labelName='PriceRange', minValue=0, maxValue=500_000, value=[]),
     ], className="filter_area")
 
 

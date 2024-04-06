@@ -1,0 +1,52 @@
+,state,sale,id
+0,Alabama,333,01
+1,Alaska,6,02
+2,Arizona,806,04
+3,Arkansas,199,05
+4,California,7403,06
+5,Colorado,591,08
+6,Connecticut,720,09
+7,Delaware,146,10
+8,District of Columbia,26,11
+9,Florida,6142,12
+10,Georgia,846,13
+11,Hawaii,22,15
+12,Idaho,427,16
+13,Illinois,1458,17
+14,Indiana,1241,18
+15,Iowa,272,19
+16,Kansas,235,20
+17,Kentucky,489,21
+18,Louisiana,167,22
+19,Maine,91,23
+20,Maryland,1027,24
+21,Massachusetts,729,25
+22,Michigan,5010,26
+23,Minnesota,257,27
+24,Mississippi,299,28
+25,Missouri,559,29
+26,Montana,121,30
+27,Nebraska,365,31
+28,Nevada,622,32
+29,New Hampshire,152,33
+30,New Jersey,2174,34
+31,New Mexico,164,35
+32,New York,2901,36
+33,North Carolina,1077,37
+34,North Dakota,76,38
+35,Ohio,2017,39
+36,Oklahoma,257,40
+37,Oregon,848,41
+38,Pennsylvania,5278,42
+39,Rhode Island,99,44
+40,South Carolina,485,45
+41,South Dakota,58,46
+42,Tennessee,732,47
+43,Texas,3467,48
+44,Utah,257,49
+45,Vermont,41,50
+46,Virginia,931,51
+47,Washington,976,53
+48,West Virginia,129,54
+49,Wisconsin,386,55
+50,Wyoming,76,56

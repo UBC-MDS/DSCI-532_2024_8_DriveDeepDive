@@ -4,7 +4,7 @@ import dash_vega_components as dvc
 from dash import Dash, callback, Input, Output, dcc, html
 from vega_datasets import data
 import pandas as pd
-from utils import parsePrice, generateDropDownrDiv, generageRangeSliderDiv, generateChart
+from utils import parsePrice, generateDropDownrDiv, generageRangeSliderDiv, generateChart, filterData
 
 import altair as alt
 alt.data_transformers.enable("vegafusion")
@@ -78,29 +78,11 @@ mainContainer = dbc.Container([
         generateChart('map', spec={}),
         generateChart('bar1', spec={}),
         generateChart('line1', spec={}),
-        # dbc.Col([
-        #     dvc.Vega(id='map', spec={}, style={'width': '100%' }),
-        # ]),
-        # dbc.Col([
-        #     dvc.Vega(id='bar1', spec={}, style={'width': '100%'}),
-        # ]),
-        # dbc.Col([
-        #     dvc.Vega(id='line1', spec={}, style={'width': '100%'}),
-        # ]),
     ], className="chart_container"),
     dbc.Row([
         generateChart('histo', spec={}),
         generateChart('bar2', spec={}),
         generateChart('line2', spec={}),
-        # dbc.Col([
-        #     dvc.Vega(id='histo', spec={}, style={'width': '100%' }),
-        # ]),
-        # dbc.Col([
-        #     dvc.Vega(id='bar2', spec={}, style={'width': '100%'}),
-        # ]),
-        # dbc.Col([
-        #     dvc.Vega(id='line2', spec={}, style={'width': '100%'}),
-        # ]),
     ], className="chart_container")
 ])
 
@@ -123,19 +105,7 @@ app.layout = html.Div([
     Input('priceRange', 'value'),
 )
 def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
-    filtered = data
-    if state:
-        filtered = filtered.query('state == @state')
-    if make:
-        filtered = filtered.query('Make == @make')
-    if quality:
-        filtered = filtered.query('Quality == @quality')
-    if bodyType:
-        filtered = filtered.query('BodyType == @bodyType')
-    if yearRange:
-        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
-    if priceRange:
-        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
     return filtered.shape[0], filtered['state'].nunique(), filtered['BodyType'].nunique(), parsePrice(round(filtered['pricesold'].mean(), 2))
 
 
@@ -198,47 +168,6 @@ def create_line1(state, make, quality, bodyType, yearRange, priceRange):
 
 @callback(
     Output('histo', 'spec'),
-    [
-        Input('state', 'value'),
-        Input('make', 'value'),
-        Input('quality', 'value'),
-        Input('bodyType', 'value'),
-        Input('yearRange', 'value'),
-        Input('priceRange', 'value'),
-    ]
-)
-def create_price_distribution(state, make, quality, bodyType, yearRange, priceRange):
-    filtered = data
-    if state:
-        filtered = filtered.query('state == @state')
-    if make:
-        filtered = filtered.query('Make == @make')
-    if quality:
-        filtered = filtered.query('Quality == @quality')
-    if bodyType:
-        filtered = filtered.query('BodyType == @bodyType')
-    if yearRange:
-        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
-    if priceRange:
-        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
-    chart = alt.Chart(filtered).mark_bar().encode(
-        x=alt.X('pricesold:Q', 
-                bin=True, 
-                title='Price'),
-        y=alt.Y('count()', 
-                title='Number of Cars'),
-        tooltip=[alt.Tooltip('pricesold:Q', 
-                             title='Price', bin=True), 
-                alt.Tooltip('count()', 
-                            title='Number of Cars')]
-    ).properties(
-        width='container',
-        title='Distribution of Prices')
-
-    return chart.to_dict(format="vega")
-
-
-@callback(
     Output('bar2', 'spec'),
     Input('state', 'value'),
     Input('make', 'value'),
@@ -247,32 +176,33 @@ def create_price_distribution(state, make, quality, bodyType, yearRange, priceRa
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_quality_distribution(state, make, quality, bodyType, yearRange, priceRange):
-    filtered = data
-    if state:
-        filtered = filtered.query('state == @state')
-    if make:
-        filtered = filtered.query('Make == @make')
-    if quality:
-        filtered = filtered.query('Quality == @quality')
-    if bodyType:
-        filtered = filtered.query('BodyType == @bodyType')
-    if yearRange:
-        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
-    if priceRange:
-        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
-    chart = alt.Chart(filtered).mark_bar().encode(
+def create_charts(state, make, quality, bodyType, yearRange, priceRange):
+    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+    histo = alt.Chart(filtered).mark_bar().encode(
+        x=alt.X('pricesold:Q', bin=True, title='Price'),
+        y=alt.Y('count()', title='Number of Cars'),
+        tooltip=[
+            alt.Tooltip('pricesold:Q', title='Price', bin=True), 
+            alt.Tooltip('count()', title='Number of Cars')]
+    ).properties(
+        width='container',
+        title='Distribution of Prices'
+    ).to_dict(format="vega")
+
+    bar2 = alt.Chart(filtered).mark_bar().encode(
         x=alt.X('Quality:N', title='Quality', axis=alt.Axis(labelAngle=-45)),
         y=alt.Y('count()', title='Number of Cars'),
         color=alt.Color('Quality:N', legend=None),
-        tooltip=[alt.Tooltip('Quality:N', title='Quality'), 
-                 alt.Tooltip('count()', title='Number of Cars')]
+        tooltip=[
+            alt.Tooltip('Quality:N', title='Quality'),
+            alt.Tooltip('count()', title='Number of Cars')
+        ]
     ).properties(
         width='container',
         title='Car Count by Quality'
-    )
+    ).to_dict(format="vega")
 
-    return chart.to_dict(format="vega")
+    return histo, bar2
 
 
 @callback(

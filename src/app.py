@@ -168,8 +168,6 @@ def create_line1(state, make, quality, bodyType, yearRange, priceRange):
     ).configure_axisY(
         gridDash=[3],
         gridColor='lightgray'
-    ).configure(
-        background='#E4E4E4'
     ).to_dict(format="vega")
 
     return line1
@@ -237,8 +235,6 @@ def create_line2(state, make, quality, bodyType, yearRange, priceRange):
     ).configure_axisY(
         gridDash=[3],
         gridColor='lightgray'
-    ).configure(
-        background='#E4E4E4'
     ).to_dict(format="vega")
 
     return line2

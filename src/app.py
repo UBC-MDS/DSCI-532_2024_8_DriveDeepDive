@@ -4,6 +4,7 @@ import dash_vega_components as dvc
 from dash import Dash, callback, Input, Output, dcc, html
 from vega_datasets import data
 import pandas as pd
+import geopandas as gpd
 from utils import parsePrice, generateDropDownrDiv, generageRangeSliderDiv, generateChart, filterData
 
 import altair as alt
@@ -121,12 +122,105 @@ def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
     Input('priceRange', 'value'),
 )
 def create_map(state, make, quality, bodyType, yearRange, priceRange):
+    url = 'https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_1_states_provinces.zip'
+    us_provinces = gpd.read_file(url).query(
+    "iso_a2 == 'US'"
+    )[['wikipedia', 'name', 'region', 'postal', 'latitude', 'longitude', 'geometry']]
+    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+
+    us_state_to_abbrev = {
+        "Alabama": "AL",
+        "Alaska": "AK",
+        "Arizona": "AZ",
+        "Arkansas": "AR",
+        "California": "CA",
+        "Colorado": "CO",
+        "Connecticut": "CT",
+        "Delaware": "DE",
+        "Florida": "FL",
+        "Georgia": "GA",
+        "Hawaii": "HI",
+        "Idaho": "ID",
+        "Illinois": "IL",
+        "Indiana": "IN",
+        "Iowa": "IA",
+        "Kansas": "KS",
+        "Kentucky": "KY",
+        "Louisiana": "LA",
+        "Maine": "ME",
+        "Maryland": "MD",
+        "Massachusetts": "MA",
+        "Michigan": "MI",
+        "Minnesota": "MN",
+        "Mississippi": "MS",
+        "Missouri": "MO",
+        "Montana": "MT",
+        "Nebraska": "NE",
+        "Nevada": "NV",
+        "New Hampshire": "NH",
+        "New Jersey": "NJ",
+        "New Mexico": "NM",
+        "New York": "NY",
+        "North Carolina": "NC",
+        "North Dakota": "ND",
+        "Ohio": "OH",
+        "Oklahoma": "OK",
+        "Oregon": "OR",
+        "Pennsylvania": "PA",
+        "Rhode Island": "RI",
+        "South Carolina": "SC",
+        "South Dakota": "SD",
+        "Tennessee": "TN",
+        "Texas": "TX",
+        "Utah": "UT",
+        "Vermont": "VT",
+        "Virginia": "VA",
+        "Washington": "WA",
+        "West Virginia": "WV",
+        "Wisconsin": "WI",
+        "Wyoming": "WY",
+        "District of Columbia": "DC",
+        "American Samoa": "AS",
+        "Guam": "GU",
+        "Northern Mariana Islands": "MP",
+        "Puerto Rico": "PR",
+        "United States Minor Outlying Islands": "UM",
+        "U.S. Virgin Islands": "VI",
+    }
+    abbrev_to_us_state = dict(map(reversed, us_state_to_abbrev.items()))
+    df_processed = filtered[filtered['state'] != 'AP']
+    df_processed["state_full"] = df_processed["state"].apply(lambda x: abbrev_to_us_state[x])
+    df_processed = df_processed[df_processed['state_full'] != 'Puerto Rico']
+
+    df_count = df_processed.groupby('state_full').count()['ID']
+    df_count = df_count.reset_index()
+    df_count.columns = ['state', 'sale']
+
+    us_provinces['sale'] = 0
+    for i in range(len(us_provinces)):
+        province = us_provinces.iloc[i, 1]
+        filtered_count = df_count[df_count['state'] == province]
+        if not filtered_count.empty:
+            sale = df_count[df_count['state'] == province].iloc[0, 1]
+            us_provinces.iloc[i, -1] = sale
+    
     return (
-        alt.Chart(cars, width='container').mark_point().encode(
-            x='Horsepower',
-            y='Miles_per_Gallon',
-            tooltip='Origin'
-        ).interactive().to_dict(format="vega")
+        alt.Chart(us_provinces, width=600, height=500).mark_geoshape(stroke='white').project(
+        'albersUsa',
+        rotate=[90, 0, 0]
+        ).encode(
+            tooltip=('name', 'sale'),
+            color='sale',  # To avoid repeating colors
+            href='wikipedia',
+    ).properties(
+        width=320,  
+        height=300  
+    ).configure_title(
+        fontSize=16,
+        anchor='start'
+    ).properties(
+        title='Car Sale Distribution in US'  # Adding title
+    ).to_dict(format="vega")
     )
 
 @callback(

@@ -157,13 +157,20 @@ def create_bar1(state, make, quality, bodyType, yearRange, priceRange):
     Input('priceRange', 'value'),
 )
 def create_line1(state, make, quality, bodyType, yearRange, priceRange):
-    return (
-        alt.Chart(cars, width='container').mark_point().encode(
-            x='Horsepower',
-            y='Miles_per_Gallon',
-            tooltip='Origin'
-        ).interactive().to_dict(format="vega")
-    )
+    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+    line1 = alt.Chart(filtered, width='container').mark_line().encode(
+        x=alt.X('Year:O', title='Year of Production', axis=alt.Axis(values=[year for year in range(1960, 2025, 10)], labelAngle=0)),
+        y=alt.Y('count():Q', title='Number of Transactions', axis=alt.Axis(grid=True)),
+        tooltip=[alt.Tooltip('Year:O', title='Year'), alt.Tooltip('count():Q', title='Total Number of Transaction', format=',')],
+        color=alt.value('#4F71BE')
+    ).properties(
+        title="Total Number of Transactions: Over Selected Years"
+    ).configure_axisY(
+        gridDash=[3],
+        gridColor='lightgray'
+    ).to_dict(format="vega")
+
+    return line1
 
 
 @callback(
@@ -215,13 +222,22 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
     Input('priceRange', 'value'),
 )
 def create_line2(state, make, quality, bodyType, yearRange, priceRange):
-    return (
-        alt.Chart(cars, width='container').mark_point().encode(
-            x='Horsepower',
-            y='Miles_per_Gallon',
-            tooltip='Origin'
-        ).interactive().to_dict(format="vega")
-    )
+    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+    avg_price_by_year = filtered.groupby('Year')['pricesold'].mean().reset_index()
+
+    line2 = alt.Chart(avg_price_by_year, width='container').mark_line().encode(
+        x=alt.X('Year:O', title='Year of Production', axis=alt.Axis(values=[year for year in range(1960, 2025, 10)], labelAngle=0)),
+        y=alt.Y('pricesold:Q', axis=alt.Axis(title='Average Price', format='$,.0s', labelExpr="datum.value / 1000 + 'k'")),
+        tooltip=[alt.Tooltip('Year:O', title='Year'), alt.Tooltip('pricesold:Q', title='Average Price', format=',')],
+        color=alt.value('#4F71BE')
+    ).properties(
+        title="Average Sale Price: Over Selected Years"
+    ).configure_axisY(
+        gridDash=[3],
+        gridColor='lightgray'
+    ).to_dict(format="vega")
+
+    return line2
 
 
 if __name__ == '__main__':

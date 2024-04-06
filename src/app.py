@@ -3,31 +3,37 @@ import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
 from dash import Dash, callback, Input, Output, dcc, html
 from vega_datasets import data
+import pandas as pd
 from utils import parsePrice, generateDropDownrDiv, generageRangeSliderDiv, generateChart
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+external_scripts = [
+    'assets/tooltip.js'
+]
+
+external_stylesheets = [
+    dbc.themes.BOOTSTRAP,
+    'assets/app.css'
+]
+
+app = Dash(__name__, external_stylesheets=external_stylesheets, external_scripts=external_scripts)
 
 cars = data.cars()
+data = pd.read_csv('data/preprocessed/processed_data.csv')
 
 total_number_sales = 27523
 avg_sale_price = 32752
 num_states = 52
 num_body_type = 2
 
-html.Div(id='Header', children=[
-    html.Link(
-        rel='stylesheet',
-        href='assets/app.css'
-    )
-])
 
 filterArea = html.Div([
-        generateDropDownrDiv(valueName='state', labelName='State:', options=[], value=None),
-        generateDropDownrDiv(valueName='make', labelName='Make:', options=[], value=None),
-        generateDropDownrDiv(valueName='mileage', labelName='Mileage:', options=[], value=None),
-        generateDropDownrDiv(valueName='bodyType', labelName='BodyType:', options=[], value=None),
-        generageRangeSliderDiv(valueName='yearRange', labelName='YearRange', minValue=1950, maxValue=2024, value=[]),
-        generageRangeSliderDiv(valueName='priceRange', labelName='PriceRange', minValue=0, maxValue=500_000, value=[]),
+        generateDropDownrDiv(valueName='state', labelName='State:', options=sorted(list(data['state'].unique())), value=None),
+        generateDropDownrDiv(valueName='make', labelName='Make:', options=data['Make'].unique(), value=None),
+        generateDropDownrDiv(valueName='quality', labelName='Quality:', options=data['Quality'].unique(), value=None),
+        generateDropDownrDiv(valueName='bodyType', labelName='BodyType:', options=data['BodyType'].unique(), value=None),
+        generageRangeSliderDiv(valueName='yearRange', labelName='YearRange', minValue=1950, maxValue=2020, value=[]),
+        generageRangeSliderDiv(valueName='priceRange', labelName='PriceRange', minValue=0, maxValue=500_000, value=[], isPrice=True),
     ], className="filter_area")
 
 
@@ -42,26 +48,26 @@ mainContainer = dbc.Container([
         dbc.Col([
             html.Div([
                 html.Div('Total Number of Sales'),
-                html.Div(total_number_sales, className="summary_highlight"),
+                html.Div(total_number_sales, id="total_number_sales", className="summary_highlight"),
             ], className='summary_card')
         ]),
         dbc.Col([
             html.Div([
                 html.Div('Current Average Sale Price'),
-                html.Div(parsePrice(avg_sale_price), className="summary_highlight"),
+                html.Div(parsePrice(avg_sale_price), id='avg_sale_price', className="summary_highlight"),
             ], className='summary_card')
         ]),
         dbc.Col([
             dbc.Row([
                 html.Div([
                     html.Div('Number of States'),
-                    html.Div(num_states, className="summary_highlight"),
+                    html.Div(num_states, id="num_states", className="summary_highlight"),
                 ], className='summary_card_small'),
             ]),
             dbc.Row([
                 html.Div([
-                    html.Div('Number of States'),
-                    html.Div(num_states, className="summary_highlight"),
+                    html.Div('Number of Body Types'),
+                    html.Div(num_body_type, id="num_body_types", className="summary_highlight"),
                 ], className='summary_card_small'),
             ])
         ], className="card_column"),
@@ -103,15 +109,46 @@ app.layout = html.Div([
 
 
 @callback(
-    Output('map', 'spec'),
+    Output('total_number_sales', 'children'),
+    Output('num_states', 'children'),
+    Output('num_body_types', 'children'),
+    Output('avg_sale_price', 'children'),
     Input('state', 'value'),
     Input('make', 'value'),
-    Input('mileage', 'value'),
+    Input('quality', 'value'),
     Input('bodyType', 'value'),
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_map(state, make, mileage, bodyType, yearRange, priceRange):
+def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
+    filtered = data
+    if state:
+        filtered = filtered.query('state == @state')
+    if make:
+        filtered = filtered.query('Make == @make')
+    if quality:
+        filtered = filtered.query('Quality == @quality')
+    if bodyType:
+        filtered = filtered.query('BodyType == @bodyType')
+    if yearRange:
+        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
+    if priceRange:
+        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+    return filtered.shape[0], filtered['state'].nunique(), filtered['BodyType'].nunique(), parsePrice(round(filtered['pricesold'].mean(), 2))
+
+
+
+
+@callback(
+    Output('map', 'spec'),
+    Input('state', 'value'),
+    Input('make', 'value'),
+    Input('quality', 'value'),
+    Input('bodyType', 'value'),
+    Input('yearRange', 'value'),
+    Input('priceRange', 'value'),
+)
+def create_map(state, make, quality, bodyType, yearRange, priceRange):
     return (
         alt.Chart(cars, width='container').mark_point().encode(
             x='Horsepower',
@@ -124,12 +161,12 @@ def create_map(state, make, mileage, bodyType, yearRange, priceRange):
     Output('bar1', 'spec'),
     Input('state', 'value'),
     Input('make', 'value'),
-    Input('mileage', 'value'),
+    Input('quality', 'value'),
     Input('bodyType', 'value'),
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_bar1(state, make, mileage, bodyType, yearRange, priceRange):
+def create_bar1(state, make, quality, bodyType, yearRange, priceRange):
     return (
         alt.Chart(cars, width='container').mark_point().encode(
             x='Horsepower',
@@ -142,12 +179,12 @@ def create_bar1(state, make, mileage, bodyType, yearRange, priceRange):
     Output('line1', 'spec'),
     Input('state', 'value'),
     Input('make', 'value'),
-    Input('mileage', 'value'),
+    Input('quality', 'value'),
     Input('bodyType', 'value'),
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_line1(state, make, mileage, bodyType, yearRange, priceRange):
+def create_line1(state, make, quality, bodyType, yearRange, priceRange):
     return (
         alt.Chart(cars, width='container').mark_point().encode(
             x='Horsepower',
@@ -161,12 +198,12 @@ def create_line1(state, make, mileage, bodyType, yearRange, priceRange):
     Output('histo', 'spec'),
     Input('state', 'value'),
     Input('make', 'value'),
-    Input('mileage', 'value'),
+    Input('quality', 'value'),
     Input('bodyType', 'value'),
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_histogram(state, make, mileage, bodyType, yearRange, priceRange):
+def create_histogram(state, make, quality, bodyType, yearRange, priceRange):
     return (
         alt.Chart(cars, width='container').mark_point().encode(
             x='Horsepower',
@@ -180,12 +217,12 @@ def create_histogram(state, make, mileage, bodyType, yearRange, priceRange):
     Output('bar2', 'spec'),
     Input('state', 'value'),
     Input('make', 'value'),
-    Input('mileage', 'value'),
+    Input('quality', 'value'),
     Input('bodyType', 'value'),
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_bar2(state, make, mileage, bodyType, yearRange, priceRange):
+def create_bar2(state, make, quality, bodyType, yearRange, priceRange):
     return (
         alt.Chart(cars, width='container').mark_point().encode(
             x='Horsepower',
@@ -199,12 +236,12 @@ def create_bar2(state, make, mileage, bodyType, yearRange, priceRange):
     Output('line2', 'spec'),
     Input('state', 'value'),
     Input('make', 'value'),
-    Input('mileage', 'value'),
+    Input('quality', 'value'),
     Input('bodyType', 'value'),
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_line2(state, make, mileage, bodyType, yearRange, priceRange):
+def create_line2(state, make, quality, bodyType, yearRange, priceRange):
     return (
         alt.Chart(cars, width='container').mark_point().encode(
             x='Horsepower',

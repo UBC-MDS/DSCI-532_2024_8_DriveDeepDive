@@ -6,6 +6,8 @@ from vega_datasets import data
 import pandas as pd
 from utils import parsePrice, generateDropDownrDiv, generageRangeSliderDiv, generateChart
 
+import altair as alt
+alt.data_transformers.enable("vegafusion")
 
 external_scripts = [
     'assets/tooltip.js'
@@ -154,7 +156,7 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
             x='Horsepower',
             y='Miles_per_Gallon',
             tooltip='Origin'
-        ).interactive().to_dict()
+        ).interactive().to_dict(format="vega")
     )
 
 @callback(
@@ -172,7 +174,7 @@ def create_bar1(state, make, quality, bodyType, yearRange, priceRange):
             x='Horsepower',
             y='Miles_per_Gallon',
             tooltip='Origin'
-        ).interactive().to_dict()
+        ).interactive().to_dict(format="vega")
     )
 
 @callback(
@@ -190,27 +192,50 @@ def create_line1(state, make, quality, bodyType, yearRange, priceRange):
             x='Horsepower',
             y='Miles_per_Gallon',
             tooltip='Origin'
-        ).interactive().to_dict()
+        ).interactive().to_dict(format="vega")
     )
 
 
 @callback(
     Output('histo', 'spec'),
-    Input('state', 'value'),
-    Input('make', 'value'),
-    Input('quality', 'value'),
-    Input('bodyType', 'value'),
-    Input('yearRange', 'value'),
-    Input('priceRange', 'value'),
+    [
+        Input('state', 'value'),
+        Input('make', 'value'),
+        Input('quality', 'value'),
+        Input('bodyType', 'value'),
+        Input('yearRange', 'value'),
+        Input('priceRange', 'value'),
+    ]
 )
-def create_histogram(state, make, quality, bodyType, yearRange, priceRange):
-    return (
-        alt.Chart(cars, width='container').mark_point().encode(
-            x='Horsepower',
-            y='Miles_per_Gallon',
-            tooltip='Origin'
-        ).interactive().to_dict()
-    )
+def create_price_distribution(state, make, quality, bodyType, yearRange, priceRange):
+    filtered = data
+    if state:
+        filtered = filtered.query('state == @state')
+    if make:
+        filtered = filtered.query('Make == @make')
+    if quality:
+        filtered = filtered.query('Quality == @quality')
+    if bodyType:
+        filtered = filtered.query('BodyType == @bodyType')
+    if yearRange:
+        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
+    if priceRange:
+        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+    chart = alt.Chart(filtered).mark_bar().encode(
+        x=alt.X('pricesold:Q', 
+                bin=True, 
+                title='Price'),
+        y=alt.Y('count()', 
+                title='Number of Cars'),
+        tooltip=[alt.Tooltip('pricesold:Q', 
+                             title='Price', bin=True), 
+                alt.Tooltip('count()', 
+                            title='Number of Cars')]
+    ).properties(
+        width='container',
+        title='Distribution of Prices')
+
+    return chart.to_dict(format="vega")
 
 
 @callback(
@@ -222,14 +247,32 @@ def create_histogram(state, make, quality, bodyType, yearRange, priceRange):
     Input('yearRange', 'value'),
     Input('priceRange', 'value'),
 )
-def create_bar2(state, make, quality, bodyType, yearRange, priceRange):
-    return (
-        alt.Chart(cars, width='container').mark_point().encode(
-            x='Horsepower',
-            y='Miles_per_Gallon',
-            tooltip='Origin'
-        ).interactive().to_dict()
+def create_quality_distribution(state, make, quality, bodyType, yearRange, priceRange):
+    filtered = data
+    if state:
+        filtered = filtered.query('state == @state')
+    if make:
+        filtered = filtered.query('Make == @make')
+    if quality:
+        filtered = filtered.query('Quality == @quality')
+    if bodyType:
+        filtered = filtered.query('BodyType == @bodyType')
+    if yearRange:
+        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
+    if priceRange:
+        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+    chart = alt.Chart(filtered).mark_bar().encode(
+        x=alt.X('Quality:N', title='Quality', axis=alt.Axis(labelAngle=-45)),
+        y=alt.Y('count()', title='Number of Cars'),
+        color=alt.Color('Quality:N', legend=None),
+        tooltip=[alt.Tooltip('Quality:N', title='Quality'), 
+                 alt.Tooltip('count()', title='Number of Cars')]
+    ).properties(
+        width='container',
+        title='Car Count by Quality'
     )
+
+    return chart.to_dict(format="vega")
 
 
 @callback(
@@ -247,7 +290,7 @@ def create_line2(state, make, quality, bodyType, yearRange, priceRange):
             x='Horsepower',
             y='Miles_per_Gallon',
             tooltip='Origin'
-        ).interactive().to_dict()
+        ).interactive().to_dict(format="vega")
     )
 
 

@@ -195,22 +195,33 @@ def create_line1(state, make, quality, bodyType, yearRange, priceRange):
 
 
 @callback(
-    Output('histo', 'spec'),
-    Input('state', 'value'),
-    Input('make', 'value'),
-    Input('quality', 'value'),
-    Input('bodyType', 'value'),
-    Input('yearRange', 'value'),
-    Input('priceRange', 'value'),
+    Output('price-distribution', 'spec'),
+    [
+        Input('state', 'value'),
+        Input('make', 'value'),
+        Input('mileage', 'value'),
+        Input('bodyType', 'value'),
+        Input('yearRange', 'value'),
+        Input('priceRange', 'value'),
+    ]
 )
-def create_histogram(state, make, quality, bodyType, yearRange, priceRange):
-    return (
-        alt.Chart(cars, width='container').mark_point().encode(
-            x='Horsepower',
-            y='Miles_per_Gallon',
-            tooltip='Origin'
-        ).interactive().to_dict()
+def create_price_distribution(state, make, mileage, bodyType, yearRange, priceRange):
+    chart = alt.Chart(cars).mark_bar().encode(
+        x=alt.X('pricesold:Q', 
+                bin=True, 
+                title='Price'),
+        y=alt.Y('count()', 
+                title='Number of Cars'),
+        tooltip=[alt.Tooltip('pricesold:Q', 
+                             title='Price', bin=True), 
+                 alt.Tooltip('count()', 
+                             title='Number of Cars')]
+    ).properties(
+        width='container',
+        title='Distribution of Prices'
     )
+
+    return chart.to_dict()
 
 
 @callback(

@@ -34,14 +34,18 @@ If you're looking to run the app locally or wish to contribute, we welcome your 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory and create conda envrionment:
 
-```
+```sh
 conda env create -f environment.yml
 ```
 
-3. Activate the new environment and then launch the dashboard:
+3. Activate the new environment:
 
-```
+```sh
 conda activate DriveDeepDive
+```
+4. Launch the dashboard locally:
+```sh
+python src/app.py
 ```
 
 For more information on contributing, please refer to our [contributing guidelines](https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive/blob/main/CONTRIBUTING.md).

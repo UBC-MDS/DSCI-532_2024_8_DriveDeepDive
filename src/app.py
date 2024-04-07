@@ -95,163 +95,81 @@ num_states = 52
 num_body_type = 2
 
 
-filterArea = html.Div(
+filterArea = html.Div([
+        generateDropDownrDiv(valueName='state', labelName='State:', options=sorted(list(data['state'].unique())), value=None),
+        generateDropDownrDiv(valueName='make', labelName='Make:', options=data['Make'].unique(), value=None),
+        generateDropDownrDiv(valueName='quality', labelName='Quality:', options=data['Quality'].unique(), value=None),
+        generateDropDownrDiv(valueName='bodyType', labelName='BodyType:', options=data['BodyType'].unique(), value=None),
+        generageRangeSliderDiv(valueName='yearRange', labelName='YearRange', minValue=1950, maxValue=2020, value=[]),
+        generageRangeSliderDiv(valueName='priceRange', labelName='PriceRange', minValue=0, maxValue=500_000, value=[], isPrice=True),
+    ], className="filter_area")
+
+
+mainContainer = dbc.Container([
+    dbc.Row([
+        dbc.Col([
+            html.Div([
+                html.Div('Used Car Transaction Overview:', className="title"),
+                html.Div('Across States in US', className="title")
+            ], className="title_box")
+        ], md=4),
+        dbc.Col([
+            html.Div([
+                html.Div('Total Number of Sales'),
+                html.Div(total_number_sales, id="total_number_sales", className="summary_highlight"),
+            ], className='summary_card')
+        ]),
+        dbc.Col([
+            html.Div([
+                html.Div('Current Average Sale Price'),
+                html.Div(parsePrice(avg_sale_price), id='avg_sale_price', className="summary_highlight"),
+            ], className='summary_card')
+        ]),
+        dbc.Col([
+            dbc.Row([
+                html.Div([
+                    html.Div('Number of States'),
+                    html.Div(num_states, id="num_states", className="summary_highlight"),
+                ], className='summary_card_small'),
+            ]),
+            dbc.Row([
+                html.Div([
+                    html.Div('Number of Body Types'),
+                    html.Div(num_body_type, id="num_body_types", className="summary_highlight"),
+                ], className='summary_card_small'),
+            ])
+        ], className="card_column"),
+    ]),
+    dbc.Row([
+        generateChart('map', spec={}),
+        generateChart('bar1', spec={}),
+        generateChart('line1', spec={}),
+    ], className="chart_container"),
+    dbc.Row([
+        generateChart('histo', spec={}),
+        generateChart('bar2', spec={}),
+        generateChart('line2', spec={}),
+    ], className="chart_container")
+])
+
+footer = html.Footer(
     [
-        generateDropDownrDiv(
-            valueName="state",
-            labelName="State:",
-            options=sorted(list(data["state"].unique())),
-            value=None,
-        ),
-        generateDropDownrDiv(
-            valueName="make",
-            labelName="Make:",
-            options=data["Make"].unique(),
-            value=None,
-        ),
-        generateDropDownrDiv(
-            valueName="quality",
-            labelName="Quality:",
-            options=data["Quality"].unique(),
-            value=None,
-        ),
-        generateDropDownrDiv(
-            valueName="bodyType",
-            labelName="BodyType:",
-            options=data["BodyType"].unique(),
-            value=None,
-        ),
-        generageRangeSliderDiv(
-            valueName="yearRange",
-            labelName="YearRange",
-            minValue=1950,
-            maxValue=2020,
-            value=[],
-        ),
-        generageRangeSliderDiv(
-            valueName="priceRange",
-            labelName="PriceRange",
-            minValue=0,
-            maxValue=500_000,
-            value=[],
-            isPrice=True,
-        ),
+        html.Div("""
+            DriveDeepDive Dashboard, created by Charles Xu, Chris Gao, Alan Powichrowski and Doris Wang, 
+            offers interactive insights into the US used car market.
+        """),
+        html.Span("For more details, visit our "),
+        dcc.Link("Github Repo", href="https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive", target="_blank"),
+        html.Span(" | Last Updated: 2024-Apr-6")
     ],
-    className="filter_area",
+    className="footer"
 )
 
+app.layout = html.Div([
+    html.Div([filterArea], className='nav_bar'), 
+    html.Div([mainContainer, footer], className='left_div'),
+], className='main_div')
 
-mainContainer = dbc.Container(
-    [
-        dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        html.Div(
-                            [
-                                html.Div(
-                                    "Used Car Transaction Overview:", className="title"
-                                ),
-                                html.Div("Across States in US", className="title"),
-                            ],
-                            className="title_box",
-                        )
-                    ],
-                    md=4,
-                ),
-                dbc.Col(
-                    [
-                        html.Div(
-                            [
-                                html.Div("Total Number of Sales"),
-                                html.Div(
-                                    total_number_sales,
-                                    id="total_number_sales",
-                                    className="summary_highlight",
-                                ),
-                            ],
-                            className="summary_card",
-                        )
-                    ]
-                ),
-                dbc.Col(
-                    [
-                        html.Div(
-                            [
-                                html.Div("Current Average Sale Price"),
-                                html.Div(
-                                    parsePrice(avg_sale_price),
-                                    id="avg_sale_price",
-                                    className="summary_highlight",
-                                ),
-                            ],
-                            className="summary_card",
-                        )
-                    ]
-                ),
-                dbc.Col(
-                    [
-                        dbc.Row(
-                            [
-                                html.Div(
-                                    [
-                                        html.Div("Number of States"),
-                                        html.Div(
-                                            num_states,
-                                            id="num_states",
-                                            className="summary_highlight",
-                                        ),
-                                    ],
-                                    className="summary_card_small",
-                                ),
-                            ]
-                        ),
-                        dbc.Row(
-                            [
-                                html.Div(
-                                    [
-                                        html.Div("Number of Body Types"),
-                                        html.Div(
-                                            num_body_type,
-                                            id="num_body_types",
-                                            className="summary_highlight",
-                                        ),
-                                    ],
-                                    className="summary_card_small",
-                                ),
-                            ]
-                        ),
-                    ],
-                    className="card_column",
-                ),
-            ]
-        ),
-        dbc.Row(
-            [
-                generateChart("map", spec={}),
-                generateChart("bar1", spec={}),
-                generateChart("line1", spec={}),
-            ],
-            className="chart_container",
-        ),
-        dbc.Row(
-            [
-                generateChart("histo", spec={}),
-                generateChart("bar2", spec={}),
-                generateChart("line2", spec={}),
-            ],
-            className="chart_container",
-        ),
-    ]
-)
-
-app.layout = html.Div(
-    [
-        html.Div([filterArea], className="nav_bar"),
-        html.Div([mainContainer], className="left_div"),
-    ],
-    className="main_div",
-)
 
 
 @callback(

@@ -21,7 +21,9 @@ Dive into a sea of data with just a few clicks:
 
 For a live experience, visit our [deployed dashboard].
 
-👀 Interested in seeing our dashboard in action? Check out our [demo GIF] for a quick tour!
+👀 Interested in seeing our dashboard in action? Check out our demo for a quick tour!
+
+![Dashboard Demo](https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive/blob/main/img/demo.gif)
 
 Need support? Feel free to [open an issue] on our repository, and we'll assist you promptly.
 

@@ -85,6 +85,7 @@ app = Dash(
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts,
 )
+server = app.server
 
 cars = data.cars()
 data = pd.read_csv("data/preprocessed/processed_data.csv")
@@ -381,4 +382,3 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
 
 if __name__ == "__main__":
     app.run(debug=False, port=8000, host="127.0.0.1")
-    server = app.server

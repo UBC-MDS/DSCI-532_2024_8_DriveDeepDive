@@ -10,4 +10,7 @@ dependencies:
   - ipykernel
   - pip
   - plotly
+  - pip:
+      - dash-vega-components==0.9.0
+      - vega-datasets==0.9.0
 prefix: /Users/chrisgao/miniconda3/envs/DriveDeepDive2

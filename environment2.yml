@@ -1,0 +1,13 @@
+name: DriveDeepDive2
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - altair-all
+  - dash
+  - dash-bootstrap-components
+  - geopandas
+  - ipykernel
+  - pip
+  - plotly
+prefix: /Users/chrisgao/miniconda3/envs/DriveDeepDive2

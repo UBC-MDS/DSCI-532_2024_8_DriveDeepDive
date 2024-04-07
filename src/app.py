@@ -85,6 +85,7 @@ app = Dash(
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts,
 )
+server = app.server
 
 cars = data.cars()
 data = pd.read_csv("data/preprocessed/processed_data.csv")

@@ -32,6 +32,9 @@ Need support? Feel free to [open an issue] on our repository, and we'll assist y
 If you're looking to run the app locally or wish to contribute, we welcome your interest and input! Here's
 
 1. Clone the repository to your local machine.
+```sh
+git clone https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive.git
+```
 2. Navigate to the project directory and create conda envrionment:
 
 ```sh

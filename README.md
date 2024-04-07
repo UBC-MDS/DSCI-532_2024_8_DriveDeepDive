@@ -32,13 +32,13 @@ Need support? Feel free to [open an issue] on our repository, and we'll assist y
 If you're looking to run the app locally or wish to contribute, we welcome your interest and input! Here's
 
 1. Clone the repository to your local machine.
-2. Navigate to the project directory
+2. Navigate to the project directory and create conda envrionment:
 
 ```
 conda env create -f environment.yml
 ```
 
-4. Activate the new environment and then launch the dashboard:
+3. Activate the new environment and then launch the dashboard:
 
 ```
 conda activate DriveDeepDive

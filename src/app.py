@@ -5,7 +5,7 @@ from dash import Dash, callback, Input, Output, dcc, html
 from vega_datasets import data
 import pandas as pd
 import geopandas as gpd
-from utils import (
+from src.utils import (
     parsePrice,
     generateDropDownrDiv,
     generageRangeSliderDiv,

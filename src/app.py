@@ -87,17 +87,22 @@ mainContainer = dbc.Container([
     ], className="chart_container")
 ])
 
-description = html.Footer(
+footer = html.Footer(
     [
-        html.Span("Description Here | "),
+        html.Div("""
+            DriveDeepDive Dashboard, created by Charles Xu, Chris Gao, Alan Powichrowski and Doris Wang, 
+            offers interactive insights into the US used car market.
+        """),
+        html.Span("For more details, visit our "),
         dcc.Link("Github Repo", href="https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive", target="_blank"),
         html.Span(" | Last Updated: 2024-Apr-6")
-    ]
+    ],
+    className="footer"
 )
 
 app.layout = html.Div([
     html.Div([filterArea], className='nav_bar'), 
-    html.Div([mainContainer, description], className='left_div'),
+    html.Div([mainContainer, footer], className='left_div'),
 ], className='main_div')
 
 

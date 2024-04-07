@@ -87,6 +87,6 @@
     }
 }
 .footer {
-    position: fixed;
-    bottom: 5px;
+    font-size: 12px;
+    font-style: italic;
 }

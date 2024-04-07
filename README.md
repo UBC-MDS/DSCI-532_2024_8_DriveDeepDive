@@ -19,7 +19,7 @@ Dive into a sea of data with just a few clicks:
 * Filter data based on state, make, mileage, and more to find exactly what you're looking for.
 * Analyze trends over the years with our trend lines.
 
-For a live experience, visit our [deployed dashboard].
+For a live experience, visit our deployed [dashboard](https://dsci-532-2024-8-drivedeepdive-3den.onrender.com/).
 
 👀 Interested in seeing our dashboard in action? Check out our demo for a quick tour!
 
@@ -29,40 +29,26 @@ Need support? Feel free to [open an issue] on our repository, and we'll assist y
 
 ## 🛠️ For Developers and Contributors
 
-If you're looking to run the app locally or wish to contribute, we welcome your interest and input! Here’s how to get started:
-
-**🐍 Using pip**
+If you're looking to run the app locally or wish to contribute, we welcome your interest and input! Here's
 
 1. Clone the repository to your local machine.
-2. Navigate to the project directory.
-3. Install the required dependencies using pip:
-
+```sh
+git clone https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive.git
 ```
-pip install -r requirements.txt
-```
+2. Navigate to the project directory and create conda envrionment:
 
-4. Run the dashboard locally with:
-
-```
-python src/app.py
-```
-
-**🌐 Using conda**
-
-Alternatively, if you prefer using conda, you can create a new environment and install the necessary packages as follows:
-
-1. Clone the repository to your local machine.
-2. Navigate to the project directory.
-3. Use the environment.yml file to create a new Conda environment:
-
-```
+```sh
 conda env create -f environment.yml
 ```
 
-4. Activate the new environment and then launch the dashboard:
+3. Activate the new environment:
 
+```sh
+conda activate DriveDeepDive
 ```
-conda activate drive-deep-dive
+4. Launch the dashboard locally:
+```sh
+python src/app.py
 ```
 
 For more information on contributing, please refer to our [contributing guidelines](https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive/blob/main/CONTRIBUTING.md).

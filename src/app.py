@@ -5,7 +5,7 @@ from dash import Dash, callback, Input, Output, dcc, html
 from vega_datasets import data
 import pandas as pd
 import geopandas as gpd
-from utils import (
+from src.utils import (
     parsePrice,
     generateDropDownrDiv,
     generageRangeSliderDiv,
@@ -382,4 +382,3 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
 
 if __name__ == "__main__":
     app.run(debug=False, port=8000, host="127.0.0.1")
-    server = app.server

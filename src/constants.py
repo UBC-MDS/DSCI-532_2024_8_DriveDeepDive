@@ -1,6 +1,6 @@
 import pandas as pd
 
-data = pd.read_csv("data/preprocessed/processed_data.csv")
+data = pd.read_csv("../data/preprocessed/processed_data.csv")
 
 us_state_to_abbrev = {
     "Alabama": "AL",

@@ -268,9 +268,8 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
         alt.Chart(state_counts)
         .mark_bar()
         .encode(
-            x=alt.X("State:N", title="State", axis=alt.Axis(labelAngle=0),
-                    sort=alt.EncodingSortField(field="Count", order="descending")), 
-                    y=alt.Y("Count:Q", title="Number of Transactions"),
+            x=alt.X("State:N", title="State",sort=alt.EncodingSortField(field="Count", order="descending"), axis=alt.Axis(labelAngle=-45)),
+            y=alt.Y("Count:Q", title="Number of Transactions"),
             tooltip=[
                 alt.Tooltip("State:N", title="State"),
                 alt.Tooltip("Count:Q", title="Number of Transactions"),
@@ -328,6 +327,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
         alt.Chart(filtered)
         .mark_bar()
         .encode(
+            x=alt.X("Quality:N", title="Quality", sort='-y', axis=alt.Axis(labelAngle=-45)),
             x=alt.X("Quality:N", title="Quality", axis=alt.Axis(labelAngle=0)),
             y=alt.Y("count()", title="Number of Cars"),
             color=alt.Color("Quality:N", legend=None),

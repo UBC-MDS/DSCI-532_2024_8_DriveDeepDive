@@ -7,8 +7,6 @@ from utils import parsePrice, filterData
 
 alt.data_transformers.enable("vegafusion")
 
-data = pd.read_csv("data/preprocessed/processed_data.csv")
-
 
 @callback(
     Output("total_number_sales", "children"),

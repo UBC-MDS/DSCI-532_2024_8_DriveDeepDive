@@ -328,7 +328,6 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
         .mark_bar()
         .encode(
             x=alt.X("Quality:N", title="Quality", sort='-y', axis=alt.Axis(labelAngle=-45)),
-            x=alt.X("Quality:N", title="Quality", axis=alt.Axis(labelAngle=0)),
             y=alt.Y("count()", title="Number of Cars"),
             color=alt.Color("Quality:N", legend=None),
             tooltip=[

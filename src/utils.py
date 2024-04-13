@@ -50,18 +50,27 @@ def generateChart(id, spec, width=12, height='400px'):
         width=width
     )
 
+
 def filterData(data, state, make, quality, bodyType, yearRange, priceRange): 
-    filtered = data
+    # filtered = data
+    queries = []
     if state:
-        filtered = filtered.query('state == @state')
+        queries.append('state == @state')
+        # filtered = filtered.query('state == @state')
     if make:
-        filtered = filtered.query('Make == @make')
+        queries.append('Make == @make')
+        # filtered = filtered.query('Make == @make')
     if quality:
-        filtered = filtered.query('Quality == @quality')
+        queries.append('Quality == @quality')
+        # filtered = filtered.query('Quality == @quality')
     if bodyType:
-        filtered = filtered.query('BodyType == @bodyType')
+        queries.append('BodyType == @bodyType')
+        # filtered = filtered.query('BodyType == @bodyType')
     if yearRange:
-        filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
+        queries.append('Year >= @yearRange[0] & Year <= @yearRange[1]')
+        # filtered = filtered.query('Year >= @yearRange[0] & Year <= @yearRange[1]')
     if priceRange:
-        filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+        queries.append('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+        # filtered = filtered.query('pricesold >= @priceRange[0] & pricesold <= @priceRange[1]')
+    filtered = data.query(' & '.join(queries))
     return filtered

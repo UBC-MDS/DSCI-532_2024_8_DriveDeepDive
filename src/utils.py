@@ -44,11 +44,11 @@ def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[], i
     ], className="filter_input")
 
 
-def generateChart(id, spec):
-    return dbc.Col([
-            dvc.Vega(id=id, spec=spec, style={'width': '100%' }),
-        ], width=4)
-
+def generateChart(id, spec, width=12, height='400px'):
+    return dbc.Col(
+        dvc.Vega(id=id, spec=spec, opt={'actions': False}, style={'width': '100%', 'height': height}),
+        width=width
+    )
 
 def filterData(data, state, make, quality, bodyType, yearRange, priceRange): 
     filtered = data

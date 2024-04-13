@@ -5,7 +5,7 @@ from dash import Dash, callback, Input, Output, dcc, html
 from vega_datasets import data
 import pandas as pd
 import geopandas as gpd
-from src.utils import (
+from utils import (
     parsePrice,
     generateDropDownrDiv,
     generageRangeSliderDiv,
@@ -97,6 +97,7 @@ num_body_type = 2
 
 
 filterArea = html.Div([
+        html.Div("Used Car Transaction Dashboard", className="nav_title"), 
         generateDropDownrDiv(valueName='state', labelName='State:', options=sorted(list(data['state'].unique())), value=None),
         generateDropDownrDiv(valueName='make', labelName='Make:', options=data['Make'].unique(), value=None),
         generateDropDownrDiv(valueName='quality', labelName='Quality:', options=data['Quality'].unique(), value=None),
@@ -110,48 +111,42 @@ mainContainer = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.Div([
-                html.Div('Used Car Transaction Overview:', className="title"),
-                html.Div('Across States in US', className="title")
-            ], className="title_box")
-        ], md=4),
-        dbc.Col([
-            html.Div([
                 html.Div('Total Number of Sales'),
                 html.Div(total_number_sales, id="total_number_sales", className="summary_highlight"),
-            ], className='summary_card')
+            ], className='summary_card_small')
         ]),
         dbc.Col([
             html.Div([
                 html.Div('Current Average Sale Price'),
                 html.Div(parsePrice(avg_sale_price), id='avg_sale_price', className="summary_highlight"),
-            ], className='summary_card')
+            ], className='summary_card_small')
         ]),
         dbc.Col([
-            dbc.Row([
-                html.Div([
-                    html.Div('Number of States'),
-                    html.Div(num_states, id="num_states", className="summary_highlight"),
-                ], className='summary_card_small'),
-            ]),
-            dbc.Row([
-                html.Div([
-                    html.Div('Number of Body Types'),
-                    html.Div(num_body_type, id="num_body_types", className="summary_highlight"),
-                ], className='summary_card_small'),
-            ])
-        ], className="card_column"),
+            html.Div([
+                html.Div('Number of States'),
+                html.Div(num_states, id="num_sales", className="summary_highlight"),
+            ], className='summary_card_small')
+        ]),
+        dbc.Col([
+            html.Div([
+                html.Div('Number of Body Types'),
+                html.Div(num_body_type, id='num_body_types', className="summary_highlight"),
+            ], className='summary_card_small')
+        ]),
     ]),
     dbc.Row([
-        generateChart('map', spec={}),
-        generateChart('bar1', spec={}),
-        generateChart('line1', spec={}),
+        generateChart('map', spec={}, width=8, height='400px'),  # Height adjusted to match two stacked charts
+        dbc.Col([
+            generateChart('line1', spec={}, width=12, height='200px'),  # Height is half of the map's height
+            generateChart('line2', spec={}, width=12, height='200px'),  # Height is half of the map's height
+        ], width=4),
     ], className="chart_container"),
     dbc.Row([
-        generateChart('histo', spec={}),
-        generateChart('bar2', spec={}),
-        generateChart('line2', spec={}),
-    ], className="chart_container")
-])
+        generateChart('bar1', spec={}, width=4),
+        generateChart('bar2', spec={}, width=4),
+        generateChart('histo', spec={}, width=4),
+    ], className="chart_container"),
+], fluid=True)
 
 footer = html.Footer(
     [
@@ -231,7 +226,7 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
             us_provinces.iloc[i, -1] = sale
 
     return (
-        alt.Chart(us_provinces, width=600, height=500)
+        alt.Chart(us_provinces)
         .mark_geoshape(stroke="white")
         .project("albersUsa", rotate=[90, 0, 0])
         .encode(
@@ -239,9 +234,8 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
             color="sale",  # To avoid repeating colors
             href="wikipedia",
         )
-        .properties(width=320, height=300)
-        .configure_title(fontSize=16, anchor="start")
-        .properties(title="Car Sale Distribution in US")  # Adding title
+        .configure_title(anchor="start")
+        .properties(title="Car Sale Distribution in US", width=900)  # Adding title
         .to_dict(format="vega")
     )
 
@@ -282,13 +276,13 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
             ],
         )
         .properties(
-            width="container", title="Number of Transactions in the Top-10 States"
+            title="Number of Transactions in the Top-10 States", width='container'
         )
         .to_dict(format="vega")
     )
 
     line1 = (
-        alt.Chart(filtered, width="container")
+        alt.Chart(filtered)
         .mark_line()
         .encode(
             x=alt.X(
@@ -309,7 +303,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
             ],
             color=alt.value("#4F71BE"),
         )
-        .properties(title="Total Number of Transactions: Over Selected Years")
+        .properties(title="Total Number of Transactions: Over Selected Years", width='container', height='container')
         .configure_axisY(gridDash=[3], gridColor="lightgray")
         .to_dict(format="vega")
     )
@@ -325,7 +319,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
                 alt.Tooltip("count()", title="Number of Cars"),
             ],
         )
-        .properties(width="container", title="Distribution of Prices")
+        .properties(title="Distribution of Prices", width='container')
         .to_dict(format="vega")
     )
 
@@ -334,6 +328,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
         .mark_bar()
         .encode(
             x=alt.X("Quality:N", title="Quality", sort='-y', axis=alt.Axis(labelAngle=-45)),
+            x=alt.X("Quality:N", title="Quality", axis=alt.Axis(labelAngle=0)),
             y=alt.Y("count()", title="Number of Cars"),
             color=alt.Color("Quality:N", legend=None),
             tooltip=[
@@ -341,14 +336,14 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
                 alt.Tooltip("count()", title="Number of Cars"),
             ],
         )
-        .properties(width="container", title="Car Count by Quality")
+        .properties(title="Car Count by Quality", width='container')
         .to_dict(format="vega")
     )
 
     avg_price_by_year = filtered.groupby("Year")["pricesold"].mean().reset_index()
 
     line2 = (
-        alt.Chart(avg_price_by_year, width="container")
+        alt.Chart(avg_price_by_year)
         .mark_line()
         .encode(
             x=alt.X(
@@ -372,7 +367,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
             ],
             color=alt.value("#4F71BE"),
         )
-        .properties(title="Average Sale Price: Over Selected Years")
+        .properties(title="Average Sale Price: Over Selected Years", width='container', height='container')
         .configure_axisY(gridDash=[3], gridColor="lightgray")
         .to_dict(format="vega")
     )

@@ -54,7 +54,7 @@
         text-align: center;
     }
     .summary_card_small {
-        width: 200px;
+        width: 240px;
         height: 70px;
         display: flex;
         flex-direction: column;

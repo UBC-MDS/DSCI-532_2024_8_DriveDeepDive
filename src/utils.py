@@ -2,7 +2,7 @@
 import dash_bootstrap_components as dbc
 import dash_vega_components as dvc
 from dash import dcc, html
-
+from constants import data
 
 def parsePrice(price):
     return f'${price:,}'

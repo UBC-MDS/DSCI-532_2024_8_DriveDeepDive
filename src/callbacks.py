@@ -29,7 +29,6 @@ def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
         parsePrice(round(filtered["pricesold"].mean(), 2)),
     )
 
-
 @callback(
     Output("map", "spec"),
     Input("state", "value"),
@@ -42,42 +41,38 @@ def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
 def create_map(state, make, quality, bodyType, yearRange, priceRange):
     url = "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_1_states_provinces.zip"
     us_provinces = gpd.read_file(url).query("iso_a2 == 'US'")[
-        ["wikipedia", "name", "region", "postal", "latitude", "longitude", "geometry"]
+        ["name", "geometry"]
     ]
     filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
-
     abbrev_to_us_state = dict(map(reversed, us_state_to_abbrev.items()))
-    df_processed = filtered[filtered["state"] != "AP"]
-    df_processed["state_full"] = df_processed["state"].apply(
-        lambda x: abbrev_to_us_state[x]
+    filtered['state_full'] = filtered['state'].map(abbrev_to_us_state)
+    filtered = filtered[filtered['state_full'] != 'Puerto Rico']
+    df_count = filtered.groupby('state_full').size().reset_index(name='sales')
+
+    us_provinces = us_provinces.merge(df_count, how='left', left_on='name', right_on='state_full')
+    us_provinces['sales'] = us_provinces['sales'].fillna(0)  # Replace NaN with 0
+
+    select_state = alt.selection_single(fields=['name'], name='select_state', 
+                                        on='click', clear='dblclick')
+
+    chart = alt.Chart(us_provinces).mark_geoshape(stroke='white').encode(
+        tooltip=[alt.Tooltip('name:N'), alt.Tooltip('sales:Q')],
+        color=alt.condition(
+        alt.datum.sales > 0, 
+        alt.Color('sales:Q', scale=alt.Scale(scheme='viridis'), legend=alt.Legend(title='Number of Sales')),
+        alt.value('lightgray')),
+        opacity=alt.condition(select_state, alt.value(0.9), alt.value(0.2))
+    ).add_selection(
+        select_state
+    ).properties(
+        title='Car Sale Distribution in US',
+        width=700,
+        height=400
+    ).project(
+        type='albersUsa'
     )
-    df_processed = df_processed[df_processed["state_full"] != "Puerto Rico"]
+    return chart.to_dict(format="vega")
 
-    df_count = df_processed.groupby("state_full").count()["ID"]
-    df_count = df_count.reset_index()
-    df_count.columns = ["state", "sale"]
-
-    us_provinces["sale"] = 0
-    for i in range(len(us_provinces)):
-        province = us_provinces.iloc[i, 1]
-        filtered_count = df_count[df_count["state"] == province]
-        if not filtered_count.empty:
-            sale = df_count[df_count["state"] == province].iloc[0, 1]
-            us_provinces.iloc[i, -1] = sale
-
-    return (
-        alt.Chart(us_provinces)
-        .mark_geoshape(stroke="white")
-        .project("albersUsa", rotate=[90, 0, 0])
-        .encode(
-            tooltip=("name", "sale"),
-            color="sale",  # To avoid repeating colors
-            href="wikipedia",
-        )
-        .configure_title(anchor="start")
-        .properties(title="Car Sale Distribution in US", width=900)  # Adding title
-        .to_dict(format="vega")
-    )
 
 
 @callback(

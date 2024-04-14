@@ -6,7 +6,8 @@ from utils import (
 )
 
 filterArea = html.Div([
-        html.Div("Used Car Transaction Dashboard", className="nav_title"), 
+        html.Img(src="../assets/logo.jpg", className="logo"),
+        html.Div("Drive Deep Dive", className="nav_title"), 
         generateDropDownrDiv(valueName='state', labelName='State:', options=sorted(list(data['state'].unique())), value=None),
         generateDropDownrDiv(valueName='make', labelName='Make:', options=data['Make'].unique(), value=None),
         generateDropDownrDiv(valueName='quality', labelName='Quality:', options=data['Quality'].unique(), value=None),

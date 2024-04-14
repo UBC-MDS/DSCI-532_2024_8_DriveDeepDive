@@ -23,7 +23,7 @@ For a live experience, visit our deployed [dashboard](https://dsci-532-2024-8-dr
 
 👀 Interested in seeing our dashboard in action? Check out our demo for a quick tour!
 
-![Dashboard Demo](https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive/blob/main/img/demo.gif)
+![Dashboard Demo](https://github.com/UBC-MDS/DSCI-532_2024_8_DriveDeepDive/blob/main/img/gif_update.gif)
 
 Need support? Feel free to [open an issue] on our repository, and we'll assist you promptly.
 

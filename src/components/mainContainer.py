@@ -24,7 +24,7 @@ mainContainer = dbc.Container([
         dbc.Col([
             html.Div([
                 html.Div('Number of States'),
-                html.Div(num_states, id="num_sales", className="summary_highlight"),
+                html.Div(num_states, id="num_states", className="summary_highlight"),
             ], className='summary_card_small')
         ]),
         dbc.Col([

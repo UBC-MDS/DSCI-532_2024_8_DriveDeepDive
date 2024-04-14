@@ -1,7 +1,6 @@
 
 import dash_bootstrap_components as dbc
 from dash import Dash, html
-
 from callbacks import *
 from components.filterArea import filterArea
 from components.mainContainer import mainContainer

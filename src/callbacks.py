@@ -39,36 +39,26 @@ def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
     Input("priceRange", "value"),
 )
 def create_map(state, make, quality, bodyType, yearRange, priceRange):
-    # Load US states data
     url = "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_1_states_provinces.zip"
     us_provinces = gpd.read_file(url).query("iso_a2 == 'US'")[
         ["name", "geometry"]
     ]
-
-    # Filter your data
     filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
-
-    # Map state abbreviations to full names
     abbrev_to_us_state = dict(map(reversed, us_state_to_abbrev.items()))
     filtered['state_full'] = filtered['state'].map(abbrev_to_us_state)
     filtered = filtered[filtered['state_full'] != 'Puerto Rico']
-
-    # Aggregate sales data by state
     df_count = filtered.groupby('state_full').size().reset_index(name='sales')
 
-    # Join sales data with the geodata
     us_provinces = us_provinces.merge(df_count, how='left', left_on='name', right_on='state_full')
     us_provinces['sales'] = us_provinces['sales'].fillna(0)  # Replace NaN with 0
 
-    # Create interactive selection
     select_state = alt.selection_single(fields=['name'], name='select_state', 
                                         on='click', clear='dblclick')
 
-    # Define the chart
     chart = alt.Chart(us_provinces).mark_geoshape(stroke='white').encode(
         tooltip=[alt.Tooltip('name:N'), alt.Tooltip('sales:Q')],
         color=alt.condition(
-        alt.datum.sales > 0,  # Condition to check if sales are greater than 0
+        alt.datum.sales > 0, 
         alt.Color('sales:Q', scale=alt.Scale(scheme='viridis'), legend=alt.Legend(title='Number of Sales')),
         alt.value('lightgray')),
         opacity=alt.condition(select_state, alt.value(0.9), alt.value(0.2))

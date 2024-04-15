@@ -17,6 +17,7 @@ app = Dash(
 )
 server = app.server
 app.title = "DriveDeepDive"
+app._favicon = ("logo.jpg")
 
 app.layout = html.Div([
     html.Div([filterArea], className='nav_bar'), 

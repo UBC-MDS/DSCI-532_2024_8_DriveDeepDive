@@ -24,7 +24,7 @@ mainContainer = dbc.Container([
         dbc.Col([
             html.Div([
                 html.Div('Number of States'),
-                html.Div(num_states, id="num_sales", className="summary_highlight"),
+                html.Div(num_states, id="num_states", className="summary_highlight"),
             ], className='summary_card_small')
         ]),
         dbc.Col([
@@ -35,15 +35,15 @@ mainContainer = dbc.Container([
         ]),
     ]),
     dbc.Row([
-        generateChart('map', spec={}, width=8, height='400px'),  # Height adjusted to match two stacked charts
+        generateChart('map', spec={}, width=8, height='260px'),  # Height adjusted to match two stacked charts
         dbc.Col([
-            generateChart('line1', spec={}, width=12, height='200px'),  # Height is half of the map's height
-            generateChart('line2', spec={}, width=12, height='200px'),  # Height is half of the map's height
+            generateChart('line1', spec={}, width=12, height='180px'),  # Height is half of the map's height
+            generateChart('line2', spec={}, width=12, height='160px'),  # Height is half of the map's height
         ], width=4),
     ], className="chart_container"),
     dbc.Row([
-        generateChart('bar1', spec={}, width=4),
-        generateChart('bar2', spec={}, width=4),
-        generateChart('histo', spec={}, width=4),
+        generateChart('bar1', spec={}, width=4, height='220px'),
+        generateChart('bar2', spec={}, width=4, height='260px'),
+        generateChart('histo', spec={}, width=4, height='220px'),
     ], className="chart_container"),
 ], fluid=True)

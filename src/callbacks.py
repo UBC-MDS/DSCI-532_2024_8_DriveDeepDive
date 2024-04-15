@@ -67,7 +67,7 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
     ).properties(
         title='Car Sale Distribution in US',
         width=700,
-        height=400
+        height=300
     ).project(
         type='albersUsa'
     )
@@ -111,7 +111,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
             ],
         )
         .properties(
-            title="Number of Transactions in the Top-10 States", width='container'
+            title="Number of Transactions in the Top-10 States", width='container', height='container'
         )
         .to_dict(format="vega")
     )
@@ -154,7 +154,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
                 alt.Tooltip("count()", title="Number of Cars"),
             ],
         )
-        .properties(title="Distribution of Prices", width='container')
+        .properties(title="Distribution of Prices", width='container', height='container')
         .to_dict(format="vega")
     )
 
@@ -170,7 +170,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
                 alt.Tooltip("count()", title="Number of Cars"),
             ],
         )
-        .properties(title="Car Count by Quality", width='container')
+        .properties(title="Car Count by Quality", width='container', height='container')
         .to_dict(format="vega")
     )
 

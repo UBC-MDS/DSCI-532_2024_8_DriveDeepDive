@@ -16,6 +16,7 @@ app = Dash(
     external_scripts=external_scripts,
 )
 server = app.server
+app.title = "DriveDeepDive"
 
 app.layout = html.Div([
     html.Div([filterArea], className='nav_bar'), 

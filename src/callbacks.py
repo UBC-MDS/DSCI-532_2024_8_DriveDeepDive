@@ -2,7 +2,7 @@ import altair as alt
 from dash import callback, Input, Output
 import pandas as pd
 import geopandas as gpd
-from constants import us_state_to_abbrev, data
+from constants import us_state_to_abbrev, us_abbrev_to_state, data
 from utils import parsePrice, filterData
 
 alt.data_transformers.enable("vegafusion")

@@ -43,20 +43,21 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
     us_provinces = gpd.read_file(url).query("iso_a2 == 'US'")[
         ["name", "geometry"]
     ]
+
     filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
     abbrev_to_us_state = dict(map(reversed, us_state_to_abbrev.items()))
     filtered['state_full'] = filtered['state'].map(abbrev_to_us_state)
     filtered = filtered[filtered['state_full'] != 'Puerto Rico']
     df_count = filtered.groupby('state_full').size().reset_index(name='sales')
-
     us_provinces = us_provinces.merge(df_count, how='left', left_on='name', right_on='state_full')
     us_provinces['sales'] = us_provinces['sales'].fillna(0)  # Replace NaN with 0
+    us_provinces['abv'] =  us_provinces['name'].apply(lambda x: us_state_to_abbrev[x])
 
     select_state = alt.selection_single(fields=['name'], name='select_state', 
                                         on='click', clear='dblclick')
 
     chart = alt.Chart(us_provinces).mark_geoshape(stroke='white').encode(
-        tooltip=[alt.Tooltip('name:N'), alt.Tooltip('sales:Q')],
+        tooltip=[alt.Tooltip('name:N'), alt.Tooltip('abv:N'), alt.Tooltip('sales:Q')],
         color=alt.condition(
         alt.datum.sales > 0, 
         alt.Color('sales:Q', scale=alt.Scale(scheme='viridis'), legend=alt.Legend(title='Number of Sales')),

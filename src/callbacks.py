@@ -62,7 +62,7 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
         alt.Color('sales:Q', scale=alt.Scale(scheme='viridis'), legend=alt.Legend(title='Number of Sales')),
         alt.value('lightgray')),
         opacity=alt.condition(select_state, alt.value(0.9), alt.value(0.2))
-    ).add_selection(
+    ).add_params(
         select_state
     ).properties(
         title='Car Sale Distribution in US',
@@ -111,7 +111,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
             ],
         )
         .properties(
-            title="Number of Transactions in the Top-10 States", width='container', height='container'
+            title="Top-10 States Transactions: Over Selected Years", width='container', height='container'
         )
         .to_dict(format="vega")
     )
@@ -170,7 +170,7 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
                 alt.Tooltip("count()", title="Number of Cars"),
             ],
         )
-        .properties(title="Car Count by Quality", width='container', height='container')
+        .properties(title="Car Count by Quality: Over Selected Years", width='container', height='container')
         .to_dict(format="vega")
     )
 

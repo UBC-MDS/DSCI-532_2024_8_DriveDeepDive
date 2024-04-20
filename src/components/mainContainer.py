@@ -1,6 +1,6 @@
 from dash import html
 import dash_bootstrap_components as dbc
-from utils import generateChart, parsePrice
+from utils import generateChart, generateMap, parsePrice
 
 total_number_sales = 27523
 avg_sale_price = 32752
@@ -35,7 +35,7 @@ mainContainer = dbc.Container([
         ]),
     ]),
     dbc.Row([
-        generateChart('map', spec={}, width=8, height='260px'),  # Height adjusted to match two stacked charts
+        generateMap('map', spec={}, width=8, height='260px'),  # Height adjusted to match two stacked charts
         dbc.Col([
             generateChart('line1', spec={}, width=12, height='180px'),  # Height is half of the map's height
             generateChart('line2', spec={}, width=12, height='160px'),  # Height is half of the map's height

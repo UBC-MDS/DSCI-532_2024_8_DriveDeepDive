@@ -2,7 +2,7 @@ import altair as alt
 from dash import callback, Input, Output
 import pandas as pd
 import geopandas as gpd
-from constants import us_state_to_abbrev, data
+from constants import us_state_to_abbrev, us_abbrev_to_state, data
 from utils import parsePrice, filterData
 
 alt.data_transformers.enable("vegafusion")
@@ -53,8 +53,14 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
     us_provinces['sales'] = us_provinces['sales'].fillna(0)  # Replace NaN with 0
     us_provinces['abv'] =  us_provinces['name'].apply(lambda x: us_state_to_abbrev[x])
 
-    select_state = alt.selection_single(fields=['name'], name='select_state', 
+    if state:
+        select_state = alt.selection_single(fields=['name'], name='select_state', 
+                                        on='click', clear='dblclick',
+                                        init={'name': [us_abbrev_to_state[state]], 'vlPoint': {'or': [{'name': us_abbrev_to_state[state]}]}})
+    else:
+        select_state = alt.selection_single(fields=['name'], name='select_state', 
                                         on='click', clear='dblclick')
+    
 
     chart = alt.Chart(us_provinces).mark_geoshape(stroke='white').encode(
         tooltip=[alt.Tooltip('name:N'), alt.Tooltip('abv:N'), alt.Tooltip('sales:Q')],
@@ -208,3 +214,13 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
     )
 
     return bar1, line1, histo, bar2, line2
+
+
+@callback(
+    Output('state', 'value'),
+    Input('map', 'signalData'),
+)
+def print_selection(clicked_region):
+    print(clicked_region)
+    if clicked_region and 'name' in clicked_region['select_state']:
+        return us_state_to_abbrev[clicked_region["select_state"]["name"][0]]

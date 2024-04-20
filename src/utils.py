@@ -54,6 +54,15 @@ def generateChart(id, spec, width=12, height='400px'):
     )
 
 
+def generateMap(id, spec, width=12, height='400px'):
+    return dbc.Col(
+        dcc.Loading(
+            dvc.Vega(id=id, spec=spec, signalsToObserve=['select_state'], style={'width': '100%', 'height': height})
+        ),
+        width=width
+    )
+
+
 def filterData(data, state, make, quality, bodyType, yearRange, priceRange):
     queries = []
     if state:

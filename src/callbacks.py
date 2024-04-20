@@ -1,8 +1,7 @@
 import altair as alt
 from dash import callback, Input, Output
-import pandas as pd
 import geopandas as gpd
-from constants import us_state_to_abbrev, us_abbrev_to_state, data
+from constants import us_state_to_abbrev, us_abbrev_to_state
 from utils import parsePrice, filterData
 
 alt.data_transformers.enable("vegafusion")
@@ -21,7 +20,7 @@ alt.data_transformers.enable("vegafusion")
     Input("priceRange", "value"),
 )
 def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
-    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+    filtered = filterData(state, make, quality, bodyType, yearRange, priceRange)
     return (
         filtered.shape[0],
         filtered["state"].nunique(),
@@ -39,12 +38,12 @@ def update_statistics(state, make, quality, bodyType, yearRange, priceRange):
     Input("priceRange", "value"),
 )
 def create_map(state, make, quality, bodyType, yearRange, priceRange):
-    url = "https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_1_states_provinces.zip"
+    url = "../data/ne_50m_admin_1_states_provinces.zip"
     us_provinces = gpd.read_file(url).query("iso_a2 == 'US'")[
         ["name", "geometry"]
     ]
 
-    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+    filtered = filterData(state, make, quality, bodyType, yearRange, priceRange)
     abbrev_to_us_state = dict(map(reversed, us_state_to_abbrev.items()))
     filtered['state_full'] = filtered['state'].map(abbrev_to_us_state)
     filtered = filtered[filtered['state_full'] != 'Puerto Rico']
@@ -95,7 +94,7 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
     Input("priceRange", "value"),
 )
 def create_charts(state, make, quality, bodyType, yearRange, priceRange):
-    filtered = filterData(data, state, make, quality, bodyType, yearRange, priceRange)
+    filtered = filterData(state, make, quality, bodyType, yearRange, priceRange)
 
     state_counts = (
         filtered["state"]

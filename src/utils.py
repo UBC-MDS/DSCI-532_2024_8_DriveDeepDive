@@ -37,6 +37,7 @@ def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[], i
             max=maxValue,
             value=value,
             updatemode='drag',
+            step=1,
             dots=False,
             marks=None,
             tooltip=tooltip,

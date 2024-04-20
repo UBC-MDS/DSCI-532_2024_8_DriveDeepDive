@@ -17,7 +17,7 @@ def generateDropDownrDiv(valueName, labelName, options=[], value=None):
 
 def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[], isPrice=False):
     if not value:
-        value = [minValue, maxValue] 
+        value = [minValue, maxValue]
     if isPrice:
         tooltip = {
             'always_visible': True,
@@ -46,7 +46,9 @@ def generageRangeSliderDiv(valueName, labelName, minValue, maxValue, value=[], i
 
 def generateChart(id, spec, width=12, height='400px'):
     return dbc.Col(
-        dvc.Vega(id=id, spec=spec, opt={'actions': False}, style={'width': '100%', 'height': height}),
+        dcc.Loading(
+            dvc.Vega(id=id, spec=spec, opt={'actions': False}, style={'width': '100%', 'height': height})
+        ),
         width=width
     )
 

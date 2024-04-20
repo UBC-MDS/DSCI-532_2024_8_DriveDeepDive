@@ -51,7 +51,6 @@ def create_map(state, make, quality, bodyType, yearRange, priceRange):
     df_count = filtered.groupby('state_full').size().reset_index(name='sales')
     us_provinces = us_provinces.merge(df_count, how='left', left_on='name', right_on='state_full')
     us_provinces['sales'] = us_provinces['sales'].fillna(0)  # Replace NaN with 0
-    us_provinces['abv'] =  us_provinces['name'].apply(lambda x: us_state_to_abbrev[x])
 
     if state:
         select_state = alt.selection_single(fields=['name'], name='select_state', 
@@ -105,15 +104,20 @@ def create_charts(state, make, quality, bodyType, yearRange, priceRange):
         .head(10)
         .reset_index()
     )
+
     state_counts.columns = ["State", "Count"]
+    
+    abbrev_to_us_state = dict(map(reversed, us_state_to_abbrev.items()))
+    state_counts['State_full'] = state_counts['State'].map(abbrev_to_us_state)
+
     bar1 = (
         alt.Chart(state_counts)
         .mark_bar()
         .encode(
-            x=alt.X("State:N", title="State",sort=alt.EncodingSortField(field="Count", order="descending"), axis=alt.Axis(labelAngle=-45)),
+            x=alt.X("State_full:N", title="State",sort=alt.EncodingSortField(field="Count", order="descending"), axis=alt.Axis(labelAngle=-45)),
             y=alt.Y("Count:Q", title="Number of Transactions"),
             tooltip=[
-                alt.Tooltip("State:N", title="State"),
+                alt.Tooltip("State_full:N", title="State"),
                 alt.Tooltip("Count:Q", title="Number of Transactions"),
             ],
         )
